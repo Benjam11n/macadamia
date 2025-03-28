@@ -12,11 +12,12 @@ function getAllowedSteps(currentProgress: string[]): string[] {
 }
 
 export async function middleware(request: NextRequest) {
-  // Ignore non-page requests
+  // Ignore non-page requests and static assets
   if (
     request.nextUrl.pathname.startsWith('/_next') ||
     request.nextUrl.pathname.startsWith('/api') ||
-    request.nextUrl.pathname.startsWith('/static')
+    request.nextUrl.pathname.startsWith('/static') ||
+    request.nextUrl.pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|css|js)$/)
   ) {
     return NextResponse.next();
   }
