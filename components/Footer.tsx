@@ -44,7 +44,7 @@ export default function Footer() {
                     href={ROUTES.TERMS}
                     className="transition-colors hover:text-primary"
                   >
-                    Terms & Condtions
+                    Terms & Conditions
                   </Link>
                 </li>
               </ul>
