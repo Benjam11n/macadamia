@@ -45,6 +45,7 @@ export default function Interview() {
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aiTranscription]);
 
   return (
