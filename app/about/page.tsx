@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { AnimatedTooltip } from '@/components/ui/animated-tooltip';
-import { TEAM_MEMBERS } from '@/constants';
 
 export default function AboutPage() {
   return (
@@ -25,13 +23,6 @@ export default function AboutPage() {
           technology bridges the gap between theoretical knowledge and practical
           interview skills.
         </p>
-      </div>
-
-      <div className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold">Meet Our Team</h2>
-        <div className="mb-8 flex justify-start py-24">
-          <AnimatedTooltip items={TEAM_MEMBERS} />
-        </div>
       </div>
     </div>
   );

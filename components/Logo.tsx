@@ -1,4 +1,4 @@
-import { Nut } from 'lucide-react';
+// import Image from 'next/image';
 import React from 'react';
 
 export const Logo = ({ className = '' }: { className?: string }) => {
@@ -6,7 +6,7 @@ export const Logo = ({ className = '' }: { className?: string }) => {
     <div
       className={`flex ${className} items-center justify-center rounded-full bg-primary`}
     >
-      <Nut className={`text-white`} />
+      {/* <Image src="/logo.png" width={40} height={40} alt="logo" /> */}
     </div>
   );
 };

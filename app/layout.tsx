@@ -25,6 +25,9 @@ export const montserrat = localFont({
 export const metadata: Metadata = {
   title: 'Macadamia',
   description: 'Crack your next interview with confidence',
+  // icons: {
+  //   icon: '/logo.png',
+  // },
 };
 
 const API_KEY = process.env.GEMINI_API_KEY as string;
