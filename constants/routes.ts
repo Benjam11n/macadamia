@@ -4,6 +4,10 @@ export const ROUTES = {
   ROLE: '/interview/role',
   CALL: '/interview/call',
   REVIEW: '/interview/review',
+  TIPS: '/tips',
+  FAQ: '/faq',
+  ABOUT: '/about',
+  TERMS: '/terms',
 
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',

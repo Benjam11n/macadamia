@@ -1,5 +1,8 @@
 import { Github, Linkedin, Twitter } from 'lucide-react';
 import { Logo } from './Logo';
+import Link from 'next/link';
+import { ROUTES } from '@/constants/routes';
+import { CONTACT_DETAILS } from '@/constants';
 
 export default function Footer() {
   return (
@@ -21,14 +24,28 @@ export default function Footer() {
               <h3 className="font-semibold">Resources</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a href="#" className="transition-colors hover:text-primary">
-                    Interview Tips
-                  </a>
+                  <Link
+                    href={ROUTES.ABOUT}
+                    className="transition-colors hover:text-primary"
+                  >
+                    About
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="transition-colors hover:text-primary">
+                  <Link
+                    href={ROUTES.FAQ}
+                    className="transition-colors hover:text-primary"
+                  >
                     FAQ
-                  </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={ROUTES.TERMS}
+                    className="transition-colors hover:text-primary"
+                  >
+                    Terms & Conditions
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -36,27 +53,33 @@ export default function Footer() {
             <div className="space-y-4">
               <h3 className="font-semibold">Connect</h3>
               <div className="flex gap-4">
-                <a
-                  href="#"
+                <Link
+                  href={CONTACT_DETAILS.GITHUB}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
                   aria-label="Github"
                 >
                   <Github className="size-5" />
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href={CONTACT_DETAILS.LINKEDIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="size-5" />
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href={CONTACT_DETAILS.TWITTER}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
                   aria-label="Twitter"
                 >
                   <Twitter className="size-5" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
