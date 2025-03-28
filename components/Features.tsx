@@ -19,7 +19,7 @@ function Features() {
 
         <div className="grid gap-6">
           {/* Main feature - Value Proposition Section */}
-          <div className="glass-panel overflow-hidden rounded-xl p-8 shadow-lg">
+          <div className="glass-panel feature-card-hover overflow-hidden rounded-xl p-8 shadow-lg">
             <h3 className="mb-4 text-2xl font-semibold md:text-3xl">
               Elevate Your Interview Game
             </h3>
