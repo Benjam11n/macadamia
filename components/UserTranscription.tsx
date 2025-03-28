@@ -7,8 +7,8 @@ const API_KEY = process.env.GEMINI_API_KEY as string;
 const UserTranscription = ({ isModelTurn }: { isModelTurn: boolean }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcription, setTranscription] = useState('');
-  const mediaRecorderRef = useRef(null);
-  const chunksRef = useRef([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
   const {
     conversationHistory,
     setConversationHistory,
@@ -27,6 +27,7 @@ const UserTranscription = ({ isModelTurn }: { isModelTurn: boolean }) => {
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcription]);
 
   const startRecording = async () => {
@@ -75,11 +76,11 @@ const UserTranscription = ({ isModelTurn }: { isModelTurn: boolean }) => {
     }
   };
 
-  const convertBlobToBase64 = (blob) => {
+  const convertBlobToBase64 = (blob: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64String = reader.result.split(',')[1];
+        const base64String = reader.result?.toString().split(',')[1] || '';
         resolve(base64String);
       };
       reader.onerror = reject;
@@ -94,6 +95,7 @@ const UserTranscription = ({ isModelTurn }: { isModelTurn: boolean }) => {
     } else if (isModelTurn && isRecording) {
       stopRecording();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModelTurn, isRecording, isTranscribing]);
 
   // Cleanup on unmount
@@ -103,6 +105,7 @@ const UserTranscription = ({ isModelTurn }: { isModelTurn: boolean }) => {
         stopRecording();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

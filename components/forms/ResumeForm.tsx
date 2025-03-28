@@ -6,7 +6,6 @@ import { Upload, X } from 'lucide-react';
 import { useState } from 'react';
 import { useInterviewStore } from '@/store/useInterviewStore';
 import { ROUTES } from '@/constants/routes';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import * as pdfjsLib from 'pdfjs-dist';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
@@ -84,7 +83,6 @@ async function extractPdfText(file: File): Promise<string> {
 }
 
 export default function ResumeForm() {
-  const router = useRouter();
   const { navigateNext } = useNavigationFlow();
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
