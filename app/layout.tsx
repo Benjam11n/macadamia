@@ -5,7 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { LiveAPIProvider } from '@/contexts/LiveAPIContext';
 import { Toaster } from 'sonner';
 import localFont from 'next/font/local';
-import { NavBar } from '@/components/NavBar';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -41,30 +41,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`
-        ${geistSans.variable}
-        ${geistMono.variable}
-        ${montserrat.variable}
-        font-sans
-        antialiased
-      `}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <LiveAPIProvider url={uri} apiKey={API_KEY}>
-            <div className="flex min-h-screen flex-col">
-              <NavBar />
-              <main className="w-full flex-1 bg-background/85">
-                <div className="container mx-auto mt-16 px-4 sm:px-6 lg:px-8">
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`
+          ${geistSans.variable}
+          ${geistMono.variable}
+          ${montserrat.variable}
+          font-sans
+          antialiased
+          `}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <LiveAPIProvider url={uri} apiKey={API_KEY}>
+              <div className="flex min-h-screen flex-col">
+                <main className="w-full flex-1 bg-background/85">
                   {children}
-                </div>
-                <Toaster />
-              </main>
-            </div>
-          </LiveAPIProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+                  <Toaster />
+                </main>
+              </div>
+            </LiveAPIProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -29,7 +29,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="fixed right-4 top-4 rounded-full"
+      className="rounded-full"
       onClick={toggleTheme}
     >
       <Sun className="size-8 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />

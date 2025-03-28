@@ -4,6 +4,9 @@ export const ROUTES = {
   ROLE: '/interview/role',
   CALL: '/interview/call',
   REVIEW: '/interview/review',
+
+  SIGN_IN: '/sign-in',
+  SIGN_UP: '/sign-up',
 };
 
 export const FLOW_STEPS = {
