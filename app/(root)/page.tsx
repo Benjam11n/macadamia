@@ -2,10 +2,10 @@
 
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
-import { Feature } from '@/components/Features';
 import { FeatureImage } from '@/components/FeatureImage';
 import { FaqSectionWithCategories } from '@/components/blocks/faq-with-categories';
 import { DEMO_FAQS } from '@/constants';
+import Features from '@/components/Features';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
           <Hero />
 
           <div className="animate-fadeIn">
-            <Feature />
+            <Features />
             <FeatureImage />
             <FaqSectionWithCategories
               title="Frequently Asked Questions"

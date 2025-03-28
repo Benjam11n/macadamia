@@ -22,11 +22,6 @@ export default function Footer() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <a href="#" className="transition-colors hover:text-primary">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-primary">
                     Interview Tips
                   </a>
                 </li>

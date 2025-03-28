@@ -1,33 +1,26 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import { LiveAPIProvider } from '@/contexts/LiveAPIContext';
 import { Toaster } from 'sonner';
 import localFont from 'next/font/local';
 import { ClerkProvider } from '@clerk/nextjs';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-export const montserrat = localFont({
-  src: './fonts/Montserrat-VariableFont_wght.ttf',
-  variable: '--font-montserrat-regular',
+const plusJakartaSans = localFont({
+  src: './fonts/PlusJakartaSans-VariableFont_wght.ttf',
+  variable: '--font-jakarta-sans',
 });
 
 export const metadata: Metadata = {
   title: 'Macadamia',
   description: 'Crack your next interview with confidence',
+  icons: {
+    icon: '/logo1.png',
+  },
 };
 
 const API_KEY = process.env.GEMINI_API_KEY as string;
+
 if (typeof API_KEY !== 'string') {
   throw new Error('set GEMINI_API_KEY in .env.local');
 }
@@ -43,15 +36,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={`
-          ${geistSans.variable}
-          ${geistMono.variable}
-          ${montserrat.variable}
-          font-sans
-          antialiased
-          `}
-        >
+        <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <LiveAPIProvider url={uri} apiKey={API_KEY}>
               <div className="flex min-h-screen flex-col">
