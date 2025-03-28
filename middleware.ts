@@ -5,6 +5,10 @@ import { ROUTES } from './constants/routes';
 
 const isPublicRoute = createRouteMatcher([
   ROUTES.HOME,
+  ROUTES.ABOUT,
+  ROUTES.TIPS,
+  ROUTES.FAQ,
+  ROUTES.TERMS,
   ROUTES.SIGN_IN,
   ROUTES.SIGN_UP,
 ]);

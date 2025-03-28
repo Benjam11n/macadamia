@@ -1,6 +1,13 @@
 import { PresetType } from '@/types';
 import { Brain, FileText, MessageSquare } from 'lucide-react';
 
+export const CONTACT_DETAILS = {
+  GITHUB: '',
+  TWITTER: '',
+  LINKEDIN: '',
+  EMAIL: '',
+};
+
 export const FEATURES = [
   {
     icon: Brain,
@@ -107,29 +114,69 @@ export const DEFAULT_PRESETS: PresetType[] = [
   },
 ];
 
-export const DEMO_FAQS = [
+export const FAQS = [
   {
     question: 'How do I get started?',
     answer:
-      "Getting started is easy! Simply sign up for an account and follow our quick setup guide. We'll walk you through each step of the process.",
+      "Getting started is easy! Simply sign up for an account and follow our quick setup guide. We'll walk you through setting up your profile and starting your first practice interview.",
     category: 'Getting Started',
   },
   {
-    question: 'What payment methods do you accept?',
+    question: 'Is Macadamia completely free to use?',
     answer:
-      'We accept all major credit cards, PayPal, and bank transfers. All payments are processed securely through our payment partners.',
-    category: 'Billing',
+      'Yes! Macadamia is completely free to use. We support our platform through non-intrusive advertisements that allow us to continue providing high-quality interview practice tools without charging our users.',
+    category: 'Pricing',
   },
   {
-    question: 'Is there a free trial available?',
+    question: 'Why do I see advertisements on the platform?',
     answer:
-      'Yes! We offer a 14-day free trial with full access to all features. No credit card required to start your trial.',
+      "Instead of charging subscription fees, we\'ve chosen to keep Macadamia free for everyone by displaying relevant advertisements. This allows us to maintain and improve our service while keeping it accessible to all job seekers regardless of their financial situation.",
+    category: 'Pricing',
+  },
+  {
+    question: 'Are there any usage limits?',
+    answer:
+      'No! You can practice as many interviews as you need without any restrictions. Our ad-supported model allows us to offer unlimited access to all features for every user.',
     category: 'Pricing',
   },
   {
     question: 'How can I contact support?',
     answer:
-      'Our support team is available 24/7 through our help center, email support, or live chat. We typically respond within 2 hours.',
+      'Our support team is available through our help center and email support. We typically respond within 24 hours during business days.',
     category: 'Support',
   },
+  {
+    question: 'What types of interviews can I practice?',
+    answer:
+      'Macadamia supports various interview types including technical interviews, behavioral interviews, case studies, and industry-specific interviews for fields like software engineering, marketing, finance, healthcare, and more.',
+    category: 'Features',
+  },
+  {
+    question: 'How does the AI feedback work?',
+    answer:
+      'Our AI analyzes your responses based on clarity, relevance, structure, and technical accuracy where applicable. It provides real-time feedback highlighting strengths and areas for improvement, just like a real interview coach would.',
+    category: 'Features',
+  },
+  {
+    question: 'Can I track my progress over time?',
+    answer:
+      'Absolutely! Your performance dashboard shows your progress across different interview types, highlighting improvement areas and tracking your confidence scores over time.',
+    category: 'Features',
+  },
+  {
+    question: 'Is my data secure?',
+    answer:
+      'We take data security seriously. All your personal information and interview responses are encrypted and stored securely. We never share your personal data with third parties without your explicit consent.',
+    category: 'Privacy & Security',
+  },
+  {
+    question: 'Can I use Macadamia on my mobile device?',
+    answer:
+      'Yes! Macadamia is fully responsive and works on desktops, tablets, and mobile phones. Practice your interview skills anytime, anywhere.',
+    category: 'Technical',
+  },
 ];
+
+export const FAQ_CATEGORIES = Array.from(
+  new Set(FAQS.map((faq) => faq.category))
+);
