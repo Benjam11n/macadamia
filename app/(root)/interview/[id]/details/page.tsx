@@ -171,8 +171,8 @@ export default function SessionDetail() {
             <XCircle className="mb-4 size-16 text-red-500" />
             <h3 className="text-xl font-semibold">Session not found</h3>
             <p className="mb-4 text-muted-foreground">
-              The interview session you're looking for doesn't exist or has been
-              removed.
+              The interview session you&apos;re looking for doesn&apos;t exist
+              or has been removed.
             </p>
             <Link href={ROUTES.DASHBOARD}>
               <Button>Return to Dashboard</Button>
