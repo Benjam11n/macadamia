@@ -21,6 +21,7 @@ import { TargetRoleSchema } from '@/lib/validations';
 import { useInterviewStore } from '@/store/useInterviewStore';
 import { DEFAULT_PRESETS } from '@/constants';
 import { useNavigationFlow } from '@/hooks/use-navigation-flow';
+import { Preset } from '@prisma/client';
 
 type FormData = z.infer<typeof TargetRoleSchema>;
 
@@ -31,7 +32,11 @@ const defaultValues: DefaultValues<FormData> = {
   interviewerPreset: DEFAULT_PRESETS[0],
 };
 
-export default function RoleForm() {
+interface RoleFormProps {
+  presets?: Preset[];
+}
+
+export default function RoleForm({ presets }: RoleFormProps) {
   const { navigateNext } = useNavigationFlow();
   const { setRole, setPreset } = useInterviewStore();
 
@@ -135,6 +140,7 @@ export default function RoleForm() {
                         <InterviewPresets
                           value={field.value.id}
                           onChange={field.onChange}
+                          presets={presets}
                         />
                       </FormControl>
                       <FormMessage />

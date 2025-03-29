@@ -29,7 +29,7 @@ export const FEATURES = [
   },
 ];
 
-export const ENHANCED_PRESETS: PresetType[] = [
+export const DEFAULT_PRESETS: PresetType[] = [
   {
     id: 'empathetic',
     name: 'Empathetic Guide',

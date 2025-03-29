@@ -1,33 +1,10 @@
 'use server';
 
 import { ZodError, ZodSchema } from 'zod';
-import { currentUser, auth } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
+import { UnauthorizedError, ValidationError } from '../http-errors';
 import{ prisma }from '../prisma';
-
-// Custom error classes
-export class ValidationError extends Error {
-  fieldErrors: Record<string, string[]>;
-  
-  constructor(fieldErrors: Record<string, string[]>) {
-    super('Validation Error');
-    this.name = 'ValidationError';
-    this.fieldErrors = fieldErrors;
-  }
-}
-
-export class UnauthorizedError extends Error {
-  constructor(message = 'Unauthorized') {
-    super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
-// Types
-export type ClerkAuth = {
-  userId: string | null;
-  sessionId: string | null;
-  getToken: () => Promise<string | null>;
-};
+import { getUserOrCreate } from '../auth';
 
 type ActionOptions<T> = {
   params?: T;
@@ -62,22 +39,17 @@ async function action<T>({
     }
   }
   
-  // Check authorization with Clerk if required
   let session = null;
   let user = null;
   if (authorize) {
     const authData = await auth();
+    user = await getUserOrCreate();
     if (!authData?.userId) {
       return new UnauthorizedError();
     }
-    user = await currentUser();
     session = authData;
   }
   
-  // Prisma is already instantiated and connection is managed
-  // No need for explicit connection like with Mongoose
-  
-  // Return params, session, user and db for use in the action
   return { params, session, user, db: prisma };
 }
 

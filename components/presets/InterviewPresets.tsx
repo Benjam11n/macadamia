@@ -22,20 +22,26 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { InterviewerPresetSchema } from '@/lib/validations';
-import { DEFAULT_PRESETS } from '@/constants';
+import { Preset } from '@prisma/client';
+import { toast } from 'sonner';
+import { createPreset } from '@/lib/actions/preset.action';
 
 export type PresetType = z.infer<typeof InterviewerPresetSchema>;
-
 const CustomPresetSchema = InterviewerPresetSchema.omit({ id: true });
 
 interface InterviewPresetsProps {
   value?: string;
   onChange: (value: PresetType) => void;
+  presets?: Preset[];
 }
 
-export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
-  const [presets, setPresets] = useState<PresetType[]>(DEFAULT_PRESETS);
+export function InterviewPresets({
+  value,
+  onChange,
+  presets,
+}: InterviewPresetsProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const customForm = useForm<z.infer<typeof CustomPresetSchema>>({
     resolver: zodResolver(CustomPresetSchema),
@@ -47,25 +53,49 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
   });
 
   const handlePresetSelect = (presetId: string) => {
-    const selectedPreset = presets.find((p) => p.id === presetId);
+    const selectedPreset = presets?.find((p) => p.id === presetId);
     if (selectedPreset) {
       onChange(selectedPreset);
     }
   };
 
-  const onCustomPresetSubmit = (data: z.infer<typeof CustomPresetSchema>) => {
-    const newPreset: PresetType = {
-      ...data,
-      id: `custom-${Date.now()}`,
-    };
+  const onCustomPresetSubmit = async (
+    data: z.infer<typeof CustomPresetSchema>
+  ) => {
+    try {
+      setIsSubmitting(true);
 
-    setPresets((prev) => [...prev, newPreset]);
-    onChange(newPreset);
-    customForm.reset();
-    setIsCreatingCustom(false);
+      const response = await createPreset({
+        name: data.name,
+        description: data.description,
+        personality: data.personality,
+      });
+
+      if (response.success && response.data) {
+        onChange(response.data);
+
+        toast('Success', {
+          description: 'Custom preset created successfully',
+        });
+
+        customForm.reset();
+        setIsCreatingCustom(false);
+      } else {
+        toast.error('Error', {
+          description: response.error?.message || 'Failed to create preset',
+        });
+      }
+    } catch (error) {
+      console.error('Error creating preset:', error);
+      toast.error('Error', {
+        description: 'An unexpected error occurred',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const selectedPreset = presets.find((p) => p.id === value);
+  const selectedPreset = presets?.find((p) => p.id === value);
 
   return (
     <div className="space-y-4">
@@ -75,7 +105,7 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
             <SelectValue placeholder="Select a personality preset" />
           </SelectTrigger>
           <SelectContent>
-            {presets.map((preset) => (
+            {presets?.map((preset) => (
               <SelectItem
                 key={preset.id}
                 value={preset.id}
@@ -116,7 +146,6 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
               <X className="size-4" />
             </Button>
           </div>
-
           <Form {...customForm}>
             <div className="space-y-4">
               <FormField
@@ -136,7 +165,6 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={customForm.control}
                 name="description"
@@ -154,7 +182,6 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={customForm.control}
                 name="personality"
@@ -172,20 +199,21 @@ export function InterviewPresets({ value, onChange }: InterviewPresetsProps) {
                   </FormItem>
                 )}
               />
-
               <div className="flex gap-2 pt-2">
                 <Button
                   type="button"
                   className="h-12"
                   onClick={customForm.handleSubmit(onCustomPresetSubmit)}
+                  disabled={isSubmitting}
                 >
-                  Save Preset
+                  {isSubmitting ? 'Saving...' : 'Save Preset'}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   className="h-12"
                   onClick={() => setIsCreatingCustom(false)}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </Button>

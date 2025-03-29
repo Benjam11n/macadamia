@@ -1,9 +1,12 @@
+'use server';
+
 import { ROUTES } from "@/constants/routes";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { CreatePresetSchema, UpdatePresetSchema } from "../validations";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { Preset } from "@prisma/client";
 
 export async function createPreset(params: CreatePresetParams): Promise<ActionResponse> {
     const validationResult = await action({
@@ -57,7 +60,7 @@ export async function createPreset(params: CreatePresetParams): Promise<ActionRe
     }
   }
   
-  export async function getUserPresets(): Promise<ActionResponse> {
+  export async function getUserPresets(): Promise<ActionResponse<Preset[]>> {
     const validationResult = await action({
       authorize: true,
     });
@@ -71,7 +74,12 @@ export async function createPreset(params: CreatePresetParams): Promise<ActionRe
     
     try {
       const presets = await db.preset.findMany({
-        where: { userId },
+        where: {
+          OR: [
+            { isDefault: true },
+            { userId: userId }
+          ]
+        },
         orderBy: { name: 'asc' }
       });
       
