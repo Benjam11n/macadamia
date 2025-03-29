@@ -68,8 +68,9 @@ model Preset {
   name         String     @unique
   description  String
   personality  String     @db.Text
-   userId       String?     // Optional to allow system presets
+  userId       String?     // Optional to allow system presets
   user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  isDefault     Boolean   @default(false)
   interviews   Interview[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt

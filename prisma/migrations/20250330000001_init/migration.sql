@@ -54,6 +54,7 @@ CREATE TABLE "Preset" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "personality" TEXT NOT NULL,
+    "isDefault" BOOLEAN NOT NULL DEFAULT false,
     "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
