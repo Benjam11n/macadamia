@@ -1,9 +1,13 @@
 export const ROUTES = {
   HOME: '/',
+
+  DASHBOARD: '/dashboard',
   RESUME: '/interview/resume',
   ROLE: '/interview/role',
   CALL: '/interview/call',
   REVIEW: '/interview/review',
+  DETAILS: (id: string) => `/interview/${id}/details`,
+
   FAQ: '/faq',
   ABOUT: '/about',
   TERMS: '/terms',
