@@ -14,9 +14,6 @@ export function InterviewFeedback({ metrics }: InterviewFeedbackProps) {
         {metrics.map((metric, index) => (
           <Card key={index} className="space-y-2 p-4">
             <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
-                <metric.icon className="size-4 text-primary" />
-              </div>
               <h4 className="font-medium">{metric.category}</h4>
             </div>
             <div className="flex items-center gap-2">

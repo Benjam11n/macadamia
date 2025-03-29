@@ -1,5 +1,3 @@
-import { LucideIcon } from 'lucide-react';
-
 export interface Role {
   title: string;
   company: string;
@@ -18,7 +16,6 @@ export interface FeedbackMetric {
   category: string;
   score: number;
   feedback: string;
-  icon: LucideIcon;
 }
 
 export interface ChatMessage {

@@ -2,6 +2,7 @@
 
 import { ZodError, ZodSchema } from 'zod';
 import { currentUser, auth } from '@clerk/nextjs/server';
+import{ prisma }from '../prisma';
 
 // Custom error classes
 export class ValidationError extends Error {

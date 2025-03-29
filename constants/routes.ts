@@ -5,7 +5,7 @@ export const ROUTES = {
   RESUME: '/interview/resume',
   ROLE: '/interview/role',
   CALL: '/interview/call',
-  REVIEW: '/interview/review',
+  REVIEW:(id:string) => `/interview/${id}/review`,
   DETAILS: (id: string) => `/interview/${id}/details`,
 
   FAQ: '/faq',

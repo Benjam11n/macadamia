@@ -13,8 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String      @id @default(uuid())
+  clerkId       String      @unique
+  email         String      @unique
+  roles         Role[]
+  interviews    Interview[]
+  presets       Preset[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
 model Role {
   id          String     @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String     @default("")
   company     String     @default("")
   description String     @default("")
@@ -25,6 +38,8 @@ model Role {
 
 model Interview {
   id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   roleId          String
   role            Role          @relation(fields: [roleId], references: [id])
   resume          String        @default("")
@@ -32,9 +47,11 @@ model Interview {
   preset          Preset        @relation(fields: [presetId], references: [id])
   isTranscribing  Boolean       @default(false)
   messages        ChatMessage[]
+  feedback        Feedback?     
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }
+
 
 model ChatMessage {
   id           String    @id @default(uuid())
@@ -51,7 +68,30 @@ model Preset {
   name         String     @unique
   description  String
   personality  String     @db.Text
+   userId       String?     // Optional to allow system presets
+  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   interviews   Interview[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+}
+
+model Feedback {
+  id          String           @id @default(uuid())
+  interviewId String           @unique
+  interview   Interview        @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  metrics     FeedbackMetric[]
+  summary     String           @db.Text
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model FeedbackMetric {
+  id          String    @id @default(uuid())
+  feedbackId  String
+  feedback    Feedback  @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  category    String
+  score       Int
+  comment     String    @db.Text     
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
