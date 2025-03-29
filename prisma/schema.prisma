@@ -12,3 +12,46 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Role {
+  id          String     @id @default(uuid())
+  title       String     @default("")
+  company     String     @default("")
+  description String     @default("")
+  interviews  Interview[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Interview {
+  id              String        @id @default(uuid())
+  roleId          String
+  role            Role          @relation(fields: [roleId], references: [id])
+  resume          String        @default("")
+  presetId        String
+  preset          Preset        @relation(fields: [presetId], references: [id])
+  isTranscribing  Boolean       @default(false)
+  messages        ChatMessage[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model ChatMessage {
+  id           String    @id @default(uuid())
+  interviewId  String
+  interview    Interview @relation(fields: [interviewId], references: [id])
+  role         String    // "user" or "assistant"
+  content      String    @db.Text
+  timestamp    BigInt    // Store JavaScript timestamp
+  createdAt    DateTime  @default(now())
+}
+
+model Preset {
+  id           String     @id @default(uuid())
+  name         String     @unique
+  description  String
+  personality  String     @db.Text
+  interviews   Interview[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
