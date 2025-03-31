@@ -1,95 +1,102 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+export const formatDate = (dateString: Date | string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+  export const getScoreColor = (score: number) => {
+    if (score >= 85) return 'text-green-500';
+    if (score >= 70) return 'text-yellow-500';
+    return 'text-red-500';
+  };
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+  export const getProgressColor = (score: number) => {
+    if (score >= 85) return 'bg-green-500';
+    if (score >= 70) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
 
-export type GetAudioContextOptions = AudioContextOptions & {
-  id?: string;
+  import { InterviewWithRelations } from '@/types';
+
+// Parse strengths and improvements from feedback summary
+export const parseStrengthsAndImprovements = (interview: InterviewWithRelations) => {
+  if (!interview.feedback || !interview.feedback.summary) {
+    return { strengths: [], improvements: [] };
+  }
+
+  const summary = interview.feedback.summary;
+
+  // This is a simplified approach - you may need to adjust based on your actual data format
+  const strengthsMatch = summary.match(
+    /Strengths:(.*?)(?:Areas for Improvement:|$)/s
+  );
+  const improvementsMatch = summary.match(
+    /Areas for Improvement:(.*?)(?:$)/s
+  );
+
+  const strengths = strengthsMatch
+    ? strengthsMatch[1]
+        .split('\n')
+        .filter((item) => item.trim().length > 0)
+        .map((item) => item.trim().replace(/^-\s*/, ''))
+    : [];
+
+  const improvements = improvementsMatch
+    ? improvementsMatch[1]
+        .split('\n')
+        .filter((item) => item.trim().length > 0)
+        .map((item) => item.trim().replace(/^-\s*/, ''))
+    : [];
+
+  return { strengths, improvements };
 };
 
-const map: Map<string, AudioContext> = new Map();
-
-export const audioContext: (
-  options?: GetAudioContextOptions
-) => Promise<AudioContext> = (() => {
-  const didInteract = new Promise((res) => {
-    window.addEventListener('pointerdown', res, { once: true });
-    window.addEventListener('keydown', res, { once: true });
-  });
-
-  return async (options?: GetAudioContextOptions) => {
-    try {
-      const a = new Audio();
-      a.src =
-        'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-      await a.play();
-      if (options?.id && map.has(options.id)) {
-        const ctx = map.get(options.id);
-        if (ctx) {
-          return ctx;
-        }
-      }
-      const ctx = new AudioContext(options);
-      if (options?.id) {
-        map.set(options.id, ctx);
-      }
-      return ctx;
-    } catch (e) {
-      console.error(e);
-
-      await didInteract;
-      if (options?.id && map.has(options.id)) {
-        const ctx = map.get(options.id);
-        if (ctx) {
-          return ctx;
-        }
-      }
-      const ctx = new AudioContext(options);
-      if (options?.id) {
-        map.set(options.id, ctx);
-      }
-      return ctx;
-    }
-  };
-})();
-
-export const blobToJSON = (blob: Blob) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.result) {
-        const json = JSON.parse(reader.result as string);
-        resolve(json);
-      } else {
-        reject('oops');
-      }
-    };
-    reader.readAsText(blob);
-  });
-
-export function base64ToArrayBuffer(base64: string) {
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+// Extract Q&A from messages
+export const extractQuestionsAndAnswers = (interview: InterviewWithRelations, overallScore: number) => {
+  if (!interview.messages || interview.messages.length === 0) {
+    return [];
   }
-  return bytes.buffer;
-}
+
+  const qaItems = [];
+  let currentQuestion = null;
+
+  for (let i = 0; i < interview.messages.length; i++) {
+    const message = interview.messages[i];
+
+    if (message.role === 'assistant' && !message.content.startsWith('I')) {
+      // Assume this is a question from the interviewer
+      currentQuestion = {
+        id: message.id,
+        question: message.content,
+        answer: '',
+        feedback: '',
+        score: 0,
+      };
+    } else if (message.role === 'user' && currentQuestion) {
+      // This is the candidate's answer
+      currentQuestion.answer = message.content;
+
+      // Try to find a feedback message that follows
+      if (
+        i + 1 < interview.messages.length &&
+        interview.messages[i + 1].role === 'assistant'
+      ) {
+        currentQuestion.feedback = interview.messages[i + 1].content;
+      }
+
+      // Set a score - in a real application, you'd get this from actual feedback data
+      if (interview.feedback && interview.feedback.metrics.length > 0) {
+        // Use the average score as a placeholder for individual question scores
+        currentQuestion.score = overallScore;
+      }
+
+      qaItems.push(currentQuestion);
+      currentQuestion = null;
+    }
+  }
+
+  return qaItems;
+};

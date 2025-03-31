@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import { Prisma } from "@prisma/client";
 
 export interface Role {
   title: string;
@@ -18,7 +18,6 @@ export interface FeedbackMetric {
   category: string;
   score: number;
   feedback: string;
-  icon: LucideIcon;
 }
 
 export interface ChatMessage {
@@ -26,3 +25,16 @@ export interface ChatMessage {
   content: string;
   timestamp: number;
 }
+
+export type InterviewWithRelations = Prisma.InterviewGetPayload<{
+  include: {
+    role: true;
+    preset: true;
+    feedback: {
+      include: {
+        metrics: true;
+      };
+    };
+    messages: true;
+  };
+}>;

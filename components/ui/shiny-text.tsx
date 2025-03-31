@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/gemini/gemini-utils';
 
 interface ShinyTextProps {
   text: string;
