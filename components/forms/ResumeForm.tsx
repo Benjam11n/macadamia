@@ -231,7 +231,10 @@ export default function ResumeForm({ roleId, presets }: ResumeFormProps) {
         return;
       }
 
-      router.push(ROUTES.CALL);
+      if (result?.data?.id) {
+        router.push(ROUTES.CALL(result.data.id));
+        return;
+      }
     } catch (error) {
       toast.error('Failed to create interview. Please try again.');
       console.error('Interview creation error:', error);

@@ -23,7 +23,6 @@ import { createRole } from '@/lib/actions/role.action';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 
-// Removed interviewerPreset from the schema
 const RoleOnlySchema = z.object({
   jobTitle: z.string().min(1, 'Job title is required'),
   companyName: z.string().min(1, 'Company name is required'),

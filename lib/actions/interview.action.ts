@@ -7,8 +7,9 @@ import action from '../handlers/action';
 import handleError from '../handlers/error';
 import { ROUTES } from '@/constants/routes';
 import { InterviewWithRelations } from '@/types';
+import { Interview } from '@prisma/client';
 
-export async function createInterview(params: CreateInterviewParams): Promise<ActionResponse> {
+export async function createInterview(params: CreateInterviewParams): Promise<ActionResponse<Interview>> {
   const validationResult = await action({
     params,
     schema: CreateInterviewSchema,
