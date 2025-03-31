@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { audioContext } from '../lib/utils';
+import { audioContext } from '../lib/gemini/gemini-utils';
 import {
   MultimodalLiveAPIClientConnection,
   MultimodalLiveClient,

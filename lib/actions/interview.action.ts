@@ -6,6 +6,7 @@ import { CreateInterviewSchema, UpdateInterviewSchema, AddMessageSchema } from '
 import action from '../handlers/action';
 import handleError from '../handlers/error';
 import { ROUTES } from '@/constants/routes';
+import { InterviewWithRelations } from '@/types';
 
 export async function createInterview(params: CreateInterviewParams): Promise<ActionResponse> {
   const validationResult = await action({
@@ -37,7 +38,7 @@ export async function createInterview(params: CreateInterviewParams): Promise<Ac
   }
 }
 
-export async function getInterviewById(params: GetByIdParams): Promise<ActionResponse> {
+export async function getInterviewById(params: GetByIdParams): Promise<ActionResponse<InterviewWithRelations>> {
   const validationResult = await action({
     params,
     schema: z.object({ id: z.string().min(1) }),
@@ -72,7 +73,7 @@ export async function getInterviewById(params: GetByIdParams): Promise<ActionRes
   }
 }
 
-export async function getUserInterviews(): Promise<ActionResponse> {
+export async function getUserInterviews(): Promise<ActionResponse<InterviewWithRelations[]>> {
   const validationResult = await action({
     authorize: true,
   });

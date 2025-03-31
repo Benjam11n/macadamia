@@ -37,7 +37,7 @@ import {
   ToolResponseMessage,
   type LiveConfig,
 } from '../../types/multimodal-live-types';
-import { blobToJSON, base64ToArrayBuffer } from '../utils';
+import { blobToJSON, base64ToArrayBuffer } from './gemini-utils';
 import { ChatMessage } from '@/types';
 
 /**

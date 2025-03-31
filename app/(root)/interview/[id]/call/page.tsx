@@ -1,7 +1,7 @@
-import Interview from '@/components/Interview';
+import InterviewCall from '@/components/interview/InterviewCall';
 
 export default async function CallPage({ params }: RouteParams) {
   const { id } = await params;
 
-  return <Interview interviewId={id} />;
+  return <InterviewCall interviewId={id} />;
 }

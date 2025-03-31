@@ -3,21 +3,21 @@
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import Messages from './chat/Messages';
+import Messages from '../chat/Messages';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
-import { Macadamia } from './Macadamia';
-import Controls from './chat/Controls';
-import { cn } from '@/lib/utils';
+import { Macadamia } from '../Macadamia';
+import Controls from '../chat/Controls';
+import { cn } from '@/lib/gemini/gemini-utils';
 import { useLoggerStore } from '@/store/use-logger-store';
-import UserTranscription from './UserTranscription';
+import UserTranscription from '../UserTranscription';
 import { useInterviewStore } from '@/store/useInterviewStore';
 
 interface InterviewProps {
   interviewId: string;
 }
 
-export default function Interview({ interviewId }: InterviewProps) {
+export default function InterviewCall({ interviewId }: InterviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const messagesRef = useRef<HTMLDivElement>(null);

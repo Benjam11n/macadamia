@@ -10,7 +10,7 @@ import {
   MultimodalLiveClient,
 } from './multimodal-live-client';
 import { TranscriptionService } from '../transcription/transcription-service';
-import { blobToJSON } from '../utils';
+import { blobToJSON } from './gemini-utils';
 import { ChatMessage } from '@/types';
 
 export class EnhancedMultimodalLiveClient extends MultimodalLiveClient {

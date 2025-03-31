@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 export interface Role {
   title: string;
   company: string;
@@ -23,3 +25,16 @@ export interface ChatMessage {
   content: string;
   timestamp: number;
 }
+
+export type InterviewWithRelations = Prisma.InterviewGetPayload<{
+  include: {
+    role: true;
+    preset: true;
+    feedback: {
+      include: {
+        metrics: true;
+      };
+    };
+    messages: true;
+  };
+}>;

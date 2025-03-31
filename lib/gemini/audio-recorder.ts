@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { audioContext } from '../utils';
+import { audioContext } from './gemini-utils';
 import AudioRecordingWorklet from '../worklets/audio-processing';
 import VolMeterWorket from '../worklets/vol-meter';
 
