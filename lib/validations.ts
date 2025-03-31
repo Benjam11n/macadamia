@@ -73,3 +73,9 @@ export const UpdatePresetSchema = z.object({
   description: z.string().min(1, "Description is required").optional(),
   personality: z.string().min(1, "Personality is required").optional()
 });
+
+export const CreateRoleSchema = z.object({
+  title: z.string().min(1, "Job title is required"),
+  company: z.string().min(1, "Company name is required"),
+  description: z.string().min(1, "Job description is required")
+});

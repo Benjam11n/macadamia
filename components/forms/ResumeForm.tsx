@@ -10,7 +10,22 @@ import { toast } from 'sonner';
 import * as pdfjsLib from 'pdfjs-dist';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 import Link from 'next/link';
-import { useNavigationFlow } from '@/hooks/use-navigation-flow';
+import { createInterview } from '@/lib/actions/interview.action';
+import { useRouter } from 'next/navigation';
+import { InterviewPresets } from '../presets/InterviewPresets';
+import { DEFAULT_PRESETS } from '@/constants';
+import { Preset } from '@prisma/client';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.mjs',
@@ -23,6 +38,12 @@ interface UploadedFile {
   name: string;
   content: string;
 }
+
+const PresetSchema = z.object({
+  interviewerPreset: z.any(),
+});
+
+type PresetFormData = z.infer<typeof PresetSchema>;
 
 async function extractPdfText(file: File): Promise<string> {
   try {
@@ -82,12 +103,24 @@ async function extractPdfText(file: File): Promise<string> {
   }
 }
 
-export default function ResumeForm() {
-  const { navigateNext } = useNavigationFlow();
+interface ResumeFormProps {
+  roleId: string;
+  presets?: Preset[];
+}
+
+export default function ResumeForm({ roleId, presets }: ResumeFormProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setResume } = useInterviewStore();
+  const router = useRouter();
+
+  const presetForm = useForm<PresetFormData>({
+    resolver: zodResolver(PresetSchema),
+    defaultValues: {
+      interviewerPreset: DEFAULT_PRESETS[0],
+    },
+  });
 
   const handleFileUpload = async (uploadedFiles: FileList) => {
     setIsLoading(true);
@@ -164,12 +197,47 @@ export default function ResumeForm() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!presetForm.getValues().interviewerPreset) {
+      toast.error('Please select an interviewer style');
+      return;
+    }
+
     const combinedContent = files
       .map((file) => `[${file.name}]\n${file.content}`)
       .join('\n\n');
+
     setResume(combinedContent);
-    navigateNext();
+
+    // Set the selected preset
+    const selectedPreset = presetForm.getValues().interviewerPreset;
+
+    try {
+      setIsLoading(true);
+
+      if (!roleId) {
+        toast.error('Role ID is missing. Please select a role.');
+        return;
+      }
+
+      const result = await createInterview({
+        roleId: roleId,
+        presetId: selectedPreset.id,
+        resume: combinedContent,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message);
+        return;
+      }
+
+      router.push(ROUTES.CALL);
+    } catch (error) {
+      toast.error('Failed to create interview. Please try again.');
+      console.error('Interview creation error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -186,12 +254,12 @@ export default function ResumeForm() {
           <CardContent className="space-y-6">
             <div
               className={`
-            flex cursor-pointer flex-col items-center
-            justify-center gap-4 rounded-lg border-2 border-dashed
-            p-8 transition-colors
-            ${isDragging ? 'border-primary bg-primary/5' : 'border-border'}
-            ${files.length === 0 ? 'min-h-[200px]' : ''}
-          `}
+                flex cursor-pointer flex-col items-center
+                justify-center gap-4 rounded-lg border-2 border-dashed
+                p-8 transition-colors
+                ${isDragging ? 'border-primary bg-primary/5' : 'border-border'}
+                ${files.length === 0 ? 'min-h-[200px]' : ''}
+              `}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -245,13 +313,38 @@ export default function ResumeForm() {
               </div>
             )}
 
+            {/* Added Interviewer Preset Selection */}
+            <Form {...presetForm}>
+              <div className="space-y-4">
+                <FormField
+                  control={presetForm.control}
+                  name="interviewerPreset"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">
+                        Interviewer Style
+                      </FormLabel>
+                      <FormControl>
+                        <InterviewPresets
+                          value={field.value?.id}
+                          onChange={field.onChange}
+                          presets={presets}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Form>
+
             <div className="flex flex-col gap-4 pt-4">
               <Button
                 className="w-full"
                 onClick={handleSubmit}
                 disabled={files.length === 0 || isLoading}
               >
-                {isLoading ? 'Processing...' : 'Next Step'}
+                {isLoading ? 'Processing...' : 'Start Practice'}
               </Button>
 
               <Link

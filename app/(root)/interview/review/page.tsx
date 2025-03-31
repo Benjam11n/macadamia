@@ -3,12 +3,17 @@
 // import { InterviewFeedback } from '@/components/feedback/InterviewFeedback';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ROUTES } from '@/constants/routes';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
-import { useNavigationFlow } from '@/hooks/use-navigation-flow';
 import { useInterviewStore } from '@/store/useInterviewStore';
+import { useRouter } from 'next/navigation';
 
-export default function ReviewPage() {
-  const { retryInterview, resetProgress } = useNavigationFlow();
+interface ReviewPageProps {
+  interviewId: string;
+}
+
+export default function ReviewPage({ interviewId }: ReviewPageProps) {
+  const router = useRouter();
   const { connected, connect, disconnect } = useLiveAPIContext();
   const { conversationHistory } = useInterviewStore();
 
@@ -17,7 +22,7 @@ export default function ReviewPage() {
       disconnect();
     }
     connect();
-    retryInterview();
+    router.push(ROUTES.CALL(interviewId));
   };
 
   return (
@@ -57,7 +62,10 @@ export default function ReviewPage() {
           {/* Action Buttons */}
           <div className="mt-8 flex justify-center gap-4">
             <Button onClick={startInterview}>Try Again</Button>
-            <Button variant="outline" onClick={resetProgress}>
+            <Button
+              variant="outline"
+              onClick={() => router.push(ROUTES.DASHBOARD)}
+            >
               Back to Home
             </Button>
           </div>

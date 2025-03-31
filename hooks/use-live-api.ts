@@ -45,7 +45,7 @@ export function useLiveAPI({
 }: MultimodalLiveAPIClientConnection): UseLiveAPIResults {
   const { role, resume, preset } = useInterviewStore();
 
-  const INITIAL_PROMPT = `${preset.personality}.
+  const INITIAL_PROMPT = `${preset?.personality}.
   The user has applied for the role of ${role?.title} at ${role?.company}.
   The job description of this role is ${role?.description}.
   Here's a summary of their resume: ${resume}.

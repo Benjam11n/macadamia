@@ -41,7 +41,7 @@ export async function createFeedback(params: CreateFeedbackParams): Promise<Acti
       }
     });
     
-    revalidatePath(ROUTES.REVIEW(interviewId));
+    revalidatePath(ROUTES.DETAILS(interviewId));
     
     return { success: true, data: JSON.parse(JSON.stringify(feedback)) };
   } catch (error) {
@@ -109,7 +109,7 @@ export async function deleteFeedback(params: DeleteByIdParams): Promise<ActionRe
       where: { id: validatedParams!.id }
     });
     
-    revalidatePath(ROUTES.REVIEW(feedback.interviewId));
+    revalidatePath(ROUTES.DETAILS(feedback.interviewId));
     
     return { success: true };
   } catch (error) {

@@ -1,7 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/routes';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { UseMediaStreamResult } from '@/hooks/use-media-stream-mux';
-import { useNavigationFlow } from '@/hooks/use-navigation-flow';
 import { useScreenCapture } from '@/hooks/use-screen-capture';
 import { useWebcam } from '@/hooks/use-webcam';
 import { AudioRecorder } from '@/lib/gemini/audio-recorder';
@@ -14,12 +16,14 @@ import {
   Monitor,
   MonitorOff,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 
 interface ControlsProps {
   videoRef: RefObject<HTMLVideoElement | null>;
   children?: ReactNode;
   supportsVideo: boolean;
+  interviewId?: string;
   onVideoStreamChange?: (stream: MediaStream | null) => void;
 }
 
@@ -70,7 +74,9 @@ export default function Controls({
   videoRef,
   onVideoStreamChange = () => {},
   supportsVideo,
+  interviewId,
 }: ControlsProps) {
+  const router = useRouter();
   const videoStreams = [useWebcam(), useScreenCapture()];
   const [activeVideoStream, setActiveVideoStream] =
     useState<MediaStream | null>(null);
@@ -81,7 +87,6 @@ export default function Controls({
   const renderCanvasRef = useRef<HTMLCanvasElement>(null);
   const connectButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { navigateNext } = useNavigationFlow();
   const { client, connected, disconnect } = useLiveAPIContext();
 
   useEffect(() => {
@@ -170,7 +175,7 @@ export default function Controls({
 
   const handleEndCall = () => {
     disconnect();
-    navigateNext();
+    router.push(ROUTES.DETAILS(interviewId!));
   };
 
   return (

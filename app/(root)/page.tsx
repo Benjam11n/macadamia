@@ -1,5 +1,3 @@
-'use client';
-
 import Hero from '@/components/Hero';
 import { FeatureImage } from '@/components/FeatureImage';
 import Features from '@/components/Features';

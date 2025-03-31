@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -12,7 +13,11 @@ import { useLoggerStore } from '@/store/use-logger-store';
 import UserTranscription from './UserTranscription';
 import { useInterviewStore } from '@/store/useInterviewStore';
 
-export default function Interview() {
+interface InterviewProps {
+  interviewId: string;
+}
+
+export default function Interview({ interviewId }: InterviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -96,6 +101,7 @@ export default function Interview() {
         videoRef={videoRef}
         supportsVideo={true}
         onVideoStreamChange={setVideoStream}
+        interviewId={interviewId}
       />
     </div>
   );

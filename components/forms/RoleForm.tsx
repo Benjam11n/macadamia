@@ -16,43 +16,64 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
-import { InterviewPresets } from '../presets/InterviewPresets';
-import { TargetRoleSchema } from '@/lib/validations';
 import { useInterviewStore } from '@/store/useInterviewStore';
-import { DEFAULT_PRESETS } from '@/constants';
-import { useNavigationFlow } from '@/hooks/use-navigation-flow';
-import { Preset } from '@prisma/client';
+import { toast } from 'sonner';
+import { useState } from 'react';
+import { createRole } from '@/lib/actions/role.action';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/constants/routes';
 
-type FormData = z.infer<typeof TargetRoleSchema>;
+// Removed interviewerPreset from the schema
+const RoleOnlySchema = z.object({
+  jobTitle: z.string().min(1, 'Job title is required'),
+  companyName: z.string().min(1, 'Company name is required'),
+  jobDescription: z.string().min(1, 'Job description is required'),
+});
+
+type FormData = z.infer<typeof RoleOnlySchema>;
 
 const defaultValues: DefaultValues<FormData> = {
   jobTitle: '',
   companyName: '',
   jobDescription: '',
-  interviewerPreset: DEFAULT_PRESETS[0],
 };
 
-interface RoleFormProps {
-  presets?: Preset[];
-}
-
-export default function RoleForm({ presets }: RoleFormProps) {
-  const { navigateNext } = useNavigationFlow();
-  const { setRole, setPreset } = useInterviewStore();
+export default function RoleForm() {
+  const router = useRouter();
+  const { setRoleId } = useInterviewStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormData>({
-    resolver: zodResolver(TargetRoleSchema),
+    resolver: zodResolver(RoleOnlySchema),
     defaultValues,
   });
 
-  const onSubmit = (data: FormData) => {
-    setRole({
-      title: data.jobTitle,
-      company: data.companyName,
-      description: data.jobDescription,
-    });
-    setPreset(data.interviewerPreset);
-    navigateNext();
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsSubmitting(true);
+
+      const result = await createRole({
+        title: data.jobTitle,
+        company: data.companyName,
+        description: data.jobDescription,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message);
+        return;
+      }
+
+      if (result.data) {
+        setRoleId(result.data.id);
+        toast.success('Role created successfully!');
+        router.push(ROUTES.RESUME(result.data.id));
+      }
+    } catch (error) {
+      toast.error('Failed to create role. Please try again.');
+      console.error('Role creation error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -128,39 +149,19 @@ export default function RoleForm({ presets }: RoleFormProps) {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="interviewerPreset"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base">
-                        Interviewer Style
-                      </FormLabel>
-                      <FormControl>
-                        <InterviewPresets
-                          value={field.value.id}
-                          onChange={field.onChange}
-                          presets={presets}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <div className="flex flex-col gap-4 pt-4">
                   <Button
                     type="submit"
                     className="h-12 text-base font-medium"
-                    disabled={form.formState.isSubmitting}
+                    disabled={isSubmitting}
                   >
-                    {form.formState.isSubmitting ? (
+                    {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 size-4 animate-spin" />
                         Processing...
                       </>
                     ) : (
-                      'Start Practice'
+                      'Next'
                     )}
                   </Button>
                 </div>

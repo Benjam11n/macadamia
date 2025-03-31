@@ -1,13 +1,16 @@
+'use client';
+
 import { Button } from './ui/button';
-import { useNavigationFlow } from '@/hooks/use-navigation-flow';
 import Link from 'next/link';
 import { ShinyText } from './ui/shiny-text';
 import { ArrowUpRight, Play, CheckCircle } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Card } from './ui/card';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/constants/routes';
 
 export default function Hero() {
-  const { navigateNext } = useNavigationFlow();
+  const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -62,7 +65,7 @@ export default function Hero() {
               <Button
                 size="lg"
                 className="group relative flex items-center overflow-hidden rounded-full px-8 py-6 text-lg font-medium shadow-lg transition-all duration-300 hover:shadow-xl"
-                onClick={navigateNext}
+                onClick={() => router.push(ROUTES.DASHBOARD)}
               >
                 Start Practising
                 <span className="ml-2 flex size-6 items-center justify-center rounded-full transition-transform group-hover:translate-x-1">
@@ -71,7 +74,8 @@ export default function Hero() {
               </Button>
 
               <Link
-                href="#"
+                href={ROUTES.ABOUT}
+                prefetch
                 className="flex items-center px-4 py-2 text-lg font-medium text-green-600 hover:text-green-700"
               >
                 Learn more
