@@ -1,10 +1,10 @@
 import { InterviewWithRelations } from '@/types';
-import { Card } from './ui/card';
+import { Card } from '../ui/card';
 import { Building, Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ROUTES } from '@/constants/routes';
-import { Badge } from './ui/badge';
+import { Badge } from '../ui/badge';
 
 interface SessionsListProps {
   interview: InterviewWithRelations;

@@ -1,6 +1,6 @@
-import Hero from '@/components/Hero';
-import { FeatureImage } from '@/components/FeatureImage';
-import Features from '@/components/Features';
+import Hero from '@/components/landing/Hero';
+import { FeatureImage } from '@/components/landing/FeatureImage';
+import Features from '@/components/landing/Features';
 
 export default function Home() {
   return (

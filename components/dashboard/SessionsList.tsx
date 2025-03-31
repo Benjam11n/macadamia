@@ -1,10 +1,10 @@
 import { InterviewWithRelations } from '@/types';
-import { Card, CardContent } from './ui/card';
+import { Card, CardContent } from '../ui/card';
 import { BarChart } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ROUTES } from '@/constants/routes';
-import DataRenderer from './DataRenderer';
+import DataRenderer from '../DataRenderer';
 import { EMPTY_SESSIONS } from '@/constants/states';
 import SessionCard from './SessionCard';
 
